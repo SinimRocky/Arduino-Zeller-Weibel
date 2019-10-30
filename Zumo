@@ -1,0 +1,119 @@
+//Import libraries or declare global variables here
+#include <Wire.h>
+#include <Zumo32U4.h>
+
+Zumo32U4LCD lcd;
+Zumo32U4LineSensors lineSensors;
+Zumo32U4ProximitySensors proxSensors;
+Zumo32U4Motors motors;
+Zumo32U4Buzzer buzzer;
+
+//Buttons
+Zumo32U4ButtonA buttonA;
+Zumo32U4ButtonB buttonB;
+Zumo32U4ButtonC buttonC;
+
+long stoptime;
+long timeleft;
+void setup() {
+  // put your setup code here, to run once:
+  buttonA.waitForButton();
+  delay(5000);
+  lineSensors.initThreeSensors();
+  proxSensors.initThreeSensors();
+ // calibrateLineSensors();
+
+  stoptime = millis() + 85000;
+
+
+}
+
+void calibrateLineSensors()
+{
+  //Show Line Cal
+  ledYellow(1);
+  lcd.clear();
+  lcd.print(F("Line cal"));
+
+  for (uint16_t i = 0; i < 400; i++)
+  {
+    lcd.gotoXY(0, 1);
+    lcd.print(i);
+    lineSensors.calibrate();
+  }
+  ledYellow(0);
+  ledGreen(1);
+  delay(1000);
+  ledGreen(0);
+  lcd.clear();
+}
+void loop() {
+
+  if (buttonB.isPressed()) {
+     motors.setLeftSpeed(0);
+     motors.setRightSpeed(0);
+  } else {
+  while (millis() < stoptime) {
+
+timeleft = stoptime - millis();
+lcd.clear();
+lcd.print(timeleft);
+
+    motors.setLeftSpeed(400);
+    motors.setRightSpeed(400);
+
+timeleft = stoptime - millis();
+lcd.clear();
+lcd.print(timeleft);
+    uint16_t lineSensorValues[3] = {0, 0, 0};
+    lineSensors.read(lineSensorValues);
+
+timeleft = stoptime - millis();
+lcd.clear();
+lcd.print(timeleft);
+
+    if(lineSensorValues[0] < 200){ 
+     buzzer.playFrequency(440, 200, 15);
+     motors.setLeftSpeed(-200);
+     motors.setRightSpeed(-200);
+     delay(300);
+     buzzer.stopPlaying(); 
+
+timeleft = stoptime - millis();
+lcd.clear();
+lcd.print(timeleft);
+
+     motors.setLeftSpeed(400);
+     motors.setRightSpeed(-400);
+     delay(500);
+     motors.setLeftSpeed(400);
+     motors.setRightSpeed(400); 
+    }
+    else if(lineSensorValues[2] < 200){
+
+timeleft = stoptime - millis();
+lcd.clear();
+lcd.print(timeleft);
+
+     buzzer.playFrequency(440, 200, 15);
+     motors.setLeftSpeed(-400);
+     motors.setRightSpeed(-400);
+     delay(250);
+
+     motors.setLeftSpeed(-400);
+     motors.setRightSpeed(400);
+     delay(200);
+      buzzer.stopPlaying();
+
+timeleft = stoptime - millis();
+lcd.clear();
+lcd.print(timeleft);
+
+     motors.setLeftSpeed(400);
+     motors.setRightSpeed(400);
+   }
+  }
+  motors.setLeftSpeed(0);
+  motors.setRightSpeed(0);
+}
+}
