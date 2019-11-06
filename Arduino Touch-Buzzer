@@ -1,0 +1,23 @@
+int Buzzer = 13;// define Buzzer Interface
+int buttonpin = 3;
+int val;// define numeric variables val
+void setup ()
+{
+pinMode (Buzzer, OUTPUT) ;//define Buzzer as output interface
+pinMode (buttonpin, INPUT) ;// define metal touch sensor output interface
+}
+
+void loop ()
+{
+val = digitalRead (buttonpin) ;//digital interface will be assigned a value of 3 to read val
+if (val == HIGH) //When the metal touch sensor detects a signal, Buzzer makes noise
+{
+digitalWrite (Buzzer, HIGH);
+tone(Buzzer, 1000);
+}
+else
+{
+digitalWrite (Buzzer, LOW);
+
+}
+}
