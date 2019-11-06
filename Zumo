@@ -1,3 +1,7 @@
+//Import libraries or declare global variables here
+#include <Wire.h>
+#include <Zumo32U4.h>
+
 Zumo32U4LCD lcd;
 Zumo32U4LineSensors lineSensors;
 Zumo32U4ProximitySensors proxSensors;
