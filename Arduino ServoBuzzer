@@ -1,3 +1,4 @@
+//declare and initiate Variables
 int pinA = 3; // Connected to CLK
 int pinB = 4; // Connected to DT
 int encoderPosCount = 0; 
@@ -26,6 +27,7 @@ void loop() {
  // We do that by reading pin B.
  if (digitalRead(pinB) != aVal) { // Means pin A Changed first - We're
 
+ //Buzzer
  encoderPosCount = encoderPosCount + 10;
  tone(buzzer, encoderPosCount);
  bCW = true;
@@ -34,6 +36,8 @@ void loop() {
  encoderPosCount = encoderPosCount - 10;
  tone(buzzer, encoderPosCount);
  }
+ 
+ //Knob position
  Serial.print ("Rotated: ");
  if (bCW){
  Serial.println ("clockwise");
